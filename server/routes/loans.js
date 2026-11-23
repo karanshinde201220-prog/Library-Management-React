@@ -1,0 +1,2 @@
+import {Router} from 'express';import {issueBook,returnBook,listLoans,dashboard} from '../controllers/loanController.js';import {asyncHandler} from '../utils/asyncHandler.js';import {requireAdmin} from '../middleware/auth.js';
+const r=Router();r.use(requireAdmin);r.get('/dashboard',asyncHandler(dashboard));r.get('/',asyncHandler(listLoans));r.post('/',asyncHandler(issueBook));r.put('/:id/return',asyncHandler(returnBook));export default r;

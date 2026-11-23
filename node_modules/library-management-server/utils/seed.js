@@ -1,0 +1,6 @@
+import 'dotenv/config';import bcrypt from 'bcryptjs';import {connectDB} from '../config/db.js';import User from '../models/User.js';import Book from '../models/Book.js';import Setting from '../models/Setting.js';
+await connectDB();
+const password=await bcrypt.hash('admin123',12);await User.findOneAndUpdate({username:'admin'},{$set:{username:'admin',email:'admin@library.local',name:'Library Administrator',role:'admin'},$setOnInsert:{password}},{upsert:true,new:true});
+if(await Book.countDocuments()===0)await Book.insertMany([{title:'Clean Code',author:'Robert C. Martin',isbn:'9780132350884',category:'Programming',publisher:'Prentice Hall',shelf:'A-01',totalCopies:4,availableCopies:4},{title:'The Pragmatic Programmer',author:'Andrew Hunt',isbn:'9780135957059',category:'Programming',publisher:'Addison-Wesley',shelf:'A-02',totalCopies:3,availableCopies:3},{title:'Atomic Habits',author:'James Clear',isbn:'9780735211292',category:'Self Development',publisher:'Avery',shelf:'B-01',totalCopies:5,availableCopies:5}]);
+for(const [key,value] of [['libraryName','Libra Library'],['loanDays','14'],['finePerDay','10'],['maxBooks','3']])await Setting.findOneAndUpdate({key},{value},{upsert:true});
+console.log('Seed complete. Admin login: admin / admin123. Existing library data was preserved.');process.exit(0);
